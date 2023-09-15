@@ -67,24 +67,30 @@ func (m *Model) Prompt(request api.GenerateRequest, embedding string) (string, e
 	}
 
 	var vars struct {
-		First  bool
 		System string
 		Prompt string
 		Embed  string
 
-		// deprecated: versions <= 0.0.7 used this to omit the system prompt
+		// deprecated
+		First   bool
 		Context []int
 	}
 
-	vars.First = len(request.Context) == 0
-	vars.System = m.System
+	switch {
+	case request.System != "":
+		vars.System = request.System
+
+	// only include the model's default system prompt on the
+	// first generation to avoid including it multiple times
+	case len(request.Context) == 0:
+		vars.System = m.System
+	}
+
 	vars.Prompt = request.Prompt
-	vars.Context = request.Context
 	vars.Embed = embedding
 
-	if request.System != "" {
-		vars.System = request.System
-	}
+	// deprecated
+	vars.First = true
 
 	var sb strings.Builder
 	if err := tmpl.Execute(&sb, vars); err != nil {

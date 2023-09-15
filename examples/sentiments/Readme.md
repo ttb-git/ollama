@@ -3,7 +3,7 @@
 This is a simple sentiments analyzer using the Orca model. When you pull Orca from the registry, it has a Template already defined that looks like this:
 
 ```Modelfile
-{{- if .First }}
+{{- if .System }}
 ### System:
 {{ .System }}
 {{- end }}

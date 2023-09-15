@@ -94,6 +94,7 @@ This bin file location should be specified as an absolute path or relative to th
 ### EMBED
 
 The EMBED instruction is used to add embeddings of files to a model. This is useful for adding custom data that the model can reference when generating an answer. Note that currently only text files are supported, formatted with each line as one embedding.
+
 ```
 FROM <model name>:<tag>
 EMBED <file path>.txt
@@ -138,11 +139,10 @@ PARAMETER <parameter> <parametervalue>
 | --------------- | ------------------------------------------------------------------------------------------------------------ |
 | `{{ .System }}` | The system prompt used to specify custom behavior, this must also be set in the Modelfile as an instruction. |
 | `{{ .Prompt }}` | The incoming prompt, this is not specified in the model file and will be set based on input.                 |
-| `{{ .First }}`  | A boolean value used to render specific template information for the first generation of a session.          |
 
 ```
 TEMPLATE """
-{{- if .First }}
+{{- if .System }}
 ### System:
 {{ .System }}
 {{- end }}
@@ -184,5 +184,4 @@ LICENSE """
 
 ## Notes
 
-- the **modelfile is not case sensitive**. In the examples, we use uppercase for instructions to make it easier to distinguish it from arguments.
 - Instructions can be in any order. In the examples, we start with FROM instruction to keep it easily readable.
